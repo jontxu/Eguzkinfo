@@ -1,0 +1,21 @@
+{% if items|length == 0 %}
+<p>No data found for this date range</p>
+{% else %}
+<table>
+	<thead>
+		{% for key in items[0].keys() %}
+		<th>{{key}}</th>
+		{% endfor %}
+	</thead>
+	<tbody>
+		{% for idx in range(items|count) %}
+		<tr>
+			{% for key in items[idx].keys() %}
+				<td>{{ items[idx][key] }}</td>
+			{% endfor %}
+			<td><a href='/vsodata?val={{results[idx]|tojson|safe}}'>Get VSO data</a></td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endif %}

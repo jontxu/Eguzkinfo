@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Sunpy Image Fetcher</title>
+		<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css"/>
+		<link rel="stylesheet" href="/static/jquery.datetimepicker.css"/>
+		<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.min.js"></script>
+		<script src="/static/jquery.datetimepicker.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.15/require.min.js"></script>
+	</head>
+	<body>
+		<h1>Hello world!</h1>
+		<input type="text" id="datetimepicker" placeholder="Date">
+		<select id="ent">
+			{% for ent in entries %}
+			<option value="{{ent.val}}">{{ent.obs}} {{ent.name}}</option>
+			{% endfor %}
+		</select>
+		<button type="button" id="query">Show plot</button>
+		<div id="container"></div>
+		<br/>
+		<input type="text" id="x1" placeholder="x1">
+		<input type="text" id="x2" placeholder="x2">
+		<input type="text" id="y1" placeholder="y1">
+		<input type="text" id="y2" placeholder="y2">
+		<button type="button" id="subquery">Show subplot</button>
+		<div id="container2"></div>
+		<hr/>
+		<input type="text" id="sdate" placeholder="Starting date">
+		<input type="text" id="edate" placeholder="Ending date">
+		<div id="container3"></div>
+		<button type="button" id="curve">Get lightcurve data</button>	
+		<select id="event">
+			{% for e in evs %}
+				<option value="{{ e }}">{{ e }}</option>
+			{% endfor %}
+		</select>
+		<button type="button" id="events">Get event list</button>
+		<div id="data"></div>
+	</body>
+	<script type="text/javascript">
+		$(function() {
+			$("#datetimepicker").datetimepicker();
+			$("#sdate").datetimepicker();
+			$("#edate").datetimepicker();
+		});
+		$("#curve").click(function() {
+			$.ajax({
+				type: 'POST',
+				async: true,
+				contentType: "application/json; charser=utf-8",
+				url: "/lightcurve",
+				data: JSON.stringify({
+					sdate: $("#sdate").val()
+				}),
+				success: function(data) {
+					$("#container3").html(data);
+				},
+				error: function(data) {
+					alert(data);
+				},
+				dataType: "html"
+			});
+			});
+		$("#events").click(function() {
+			$.ajax({
+				type: 'POST',
+				async: true,
+				contentType: "application/json; charser=utf-8",
+				url: "/events",
+				data: JSON.stringify({
+					sdate: $("#sdate").val(),
+					edate: $("#edate").val(),
+					etype: $("#event").val()
+				}),
+				success: function(data) {
+					alert(JSON.stringify(data)); 
+					$("#data").html(data);
+				},
+				error: function(data) {
+					alert(data);
+				},
+				dataType: "html"
+			});
+			});
+		$("#query").click(function() {
+			$.ajax({
+				type:'POST',
+				async: true,
+				contentType: "application/json; charset=utf-8",
+				url: "/query",
+				data: JSON.stringify({
+					ent: $("#ent").val(),
+					date: $("#datetimepicker").val()
+				}),
+				success: function(data) {
+					alert(data);
+					var graph = $("#container");
+					graph.html(data);
+					graph.show();
+				},
+				error: function(data) {
+					alert(JSON.stringify(data)); 
+				},
+				dataType: "html"
+			});
+		});
+		$("#subquery").click(function() {
+			$.ajax({
+				type:'POST',
+				async: true,
+				contentType: "application/json; charset=utf-8",
+				url: "/subquery",
+				data: JSON.stringify({
+					ent: $("#ent").val(),
+					x1: $("#x1").val(),
+					x2: $("#x2").val(),
+					y1: $("#y1").val(),
+					y2: $("#y2").val(),
+					date: $("#datetimepicker").val(),
+				}),
+				success: function(data) {
+					alert(data);
+					var graph = $("#container2");
+					graph.html(data);
+					graph.show();
+				},
+				error: function(data) {
+					alert(JSON.stringify(data)); 
+				},
+				dataType: "html"
+			});
+		});
+	</script>
+</html>

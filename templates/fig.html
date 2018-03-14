@@ -1,0 +1,20 @@
+<table>
+	<thead>
+		<th>Start time</th>
+		<th>End time</th>
+		<th>Source</th>
+		<th>Instrument</th>
+		<th>Max Wavelength</th>
+		<th>Min Wavelength</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>{{ vso[0][0].start }}</td>
+			<td>{{ vso[0][0].end }}
+			<td>{{ vso[0][1].value}}</td>
+			<td>{{ vso[0][2].value}}</td>
+			<td>{{ vso[0][3].min }} Angstrom</td>
+			<td>{{ vso[0][3].max }} Angstrom</td>
+		</tr>
+	</tbody>
+</table>
