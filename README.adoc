@@ -1,0 +1,3 @@
+= Eguzkinfo
+
+Small website made with SunPy to check observations and event information from the HEK
